@@ -1,0 +1,4 @@
+[submodule "kotlin-utils"]
+	path = kotlin-utils
+	url = https://github.com/hyuck0221/kotlin-utils.git
+	branch = version/0.0.1
