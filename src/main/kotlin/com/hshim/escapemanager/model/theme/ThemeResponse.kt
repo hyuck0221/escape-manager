@@ -19,7 +19,7 @@ class ThemeResponse(
 ) {
     constructor(theme: Theme) : this(
         id = theme.id,
-        centerId = theme.center.id,
+        centerId = theme.center!!.id,
         name = theme.name,
         description = theme.description,
         category = theme.category,

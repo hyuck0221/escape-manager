@@ -16,7 +16,7 @@ class Theme(
 
     @ManyToOne(targetEntity = Center::class, fetch = FetchType.LAZY)
     @JoinColumn(name = "center_id", nullable = false, columnDefinition = "varchar(36)")
-    val center: Center,
+    val center: Center?,
 
     @Column(nullable = false)
     var name: String,
@@ -45,4 +45,21 @@ class Theme(
 
     @Column(nullable = false)
     var maxPersonCnt: Int,
-) : BaseTimeEntity()
+) : BaseTimeEntity() {
+
+    companion object {
+        fun of(id: String) = Theme(
+            id = id,
+            center = null,
+            name = "",
+            description = null,
+            category = null,
+            difficulty = null,
+            fear = null,
+            activity = null,
+            reservationOpenTime = LocalTime.now(),
+            minPersonCnt = 0,
+            maxPersonCnt = 0,
+        )
+    }
+}

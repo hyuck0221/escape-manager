@@ -20,10 +20,10 @@ class Reservation(
     val theme: Theme,
 
     @Column(nullable = false)
-    val date: LocalDateTime,
+    var datetime: LocalDateTime,
 
     @Column(nullable = false)
-    val code: String = buildCode(),
+    var code: String = buildCode(),
 
     @Column(nullable = false)
     var name: String,
@@ -31,7 +31,7 @@ class Reservation(
     @Column(nullable = false)
     var phoneNo: String,
 
-) : BaseTimeEntity() {
+    ) : BaseTimeEntity() {
 
     companion object {
         fun buildCode(): String {

@@ -23,3 +23,11 @@ spring:
         show_sql: true
         default_batch_fetch_size: 100
         format_sql: true
+
+  security:
+    enabled: true
+
+security:
+  jwt:
+    secret: 1baef3ca-440c-47fd-a702-2802390dbad3
+    expiry: 604800

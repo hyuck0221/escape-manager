@@ -32,4 +32,8 @@ class Center (
 ): BaseTimeEntity() {
     @OneToMany(targetEntity = Theme::class, mappedBy = "center", cascade = [CascadeType.ALL], orphanRemoval = true)
     val themes: MutableSet<Theme> = mutableSetOf()
+
+    companion object {
+        fun of(id: String) = Center(id = id, name = "")
+    }
 }
