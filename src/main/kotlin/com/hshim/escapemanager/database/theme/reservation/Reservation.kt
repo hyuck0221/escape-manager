@@ -1,4 +1,4 @@
-package com.hshim.escapemanager.database.reservation
+package com.hshim.escapemanager.database.theme.reservation
 
 import com.hshim.escapemanager.database.base.BaseTimeEntity
 import com.hshim.escapemanager.database.theme.Theme

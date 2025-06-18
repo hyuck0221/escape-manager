@@ -1,5 +1,6 @@
 package com.hshim.escapemanager.database.account
 
+import com.hshim.escapemanager.database.account.admin.Admin
 import com.hshim.escapemanager.database.account.enums.Role
 import com.hshim.escapemanager.database.base.BaseTimeEntity
 import jakarta.persistence.Column
@@ -37,4 +38,7 @@ class Account (
     @Column(nullable = false, columnDefinition = "varchar(255)", insertable = false, updatable = false)
     @Enumerated(EnumType.STRING)
     var role: Role,
-): BaseTimeEntity()
+): BaseTimeEntity() {
+    val centerId: String?
+        get() = if (this is Admin) this.center.id else null
+}

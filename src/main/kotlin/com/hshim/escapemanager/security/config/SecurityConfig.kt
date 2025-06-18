@@ -1,6 +1,6 @@
 package com.hshim.escapemanager.security.config
 
-import com.hshim.escapemanager.annotation.PublicEndpoint
+import com.hshim.escapemanager.annotation.role.Public
 import com.hshim.escapemanager.security.component.JwtAuthenticationFilter
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -60,8 +60,8 @@ class SecurityConfig(
     private fun getPublicUrls(): List<String> {
         val publicUrls = mutableListOf<String>()
         requestMappingHandlerMapping.handlerMethods.forEach { (mapping, handlerMethod) ->
-            if (handlerMethod.beanType.isAnnotationPresent(PublicEndpoint::class.java) ||
-                handlerMethod.method.isAnnotationPresent(PublicEndpoint::class.java)
+            if (handlerMethod.beanType.isAnnotationPresent(Public::class.java) ||
+                handlerMethod.method.isAnnotationPresent(Public::class.java)
             ) publicUrls.addAll(mapping.patternValues)
         }
         return publicUrls

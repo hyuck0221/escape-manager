@@ -8,11 +8,18 @@ enum class GlobalException(
     val message: String,
     val status: HttpStatus = HttpStatus.BAD_REQUEST,
 ) {
-    NOT_FOUND_CENTER("센터를 찾을 수 없습니다."),
-    NOT_FOUND_RESERVATION("예약을 찾을 수 없습니다."),
-    NOT_FOUND_THEME("테마를 찾을 수 없습니다."),
-    NOT_FOUND_ADMIN("관리자를 찾을 수 없습니다."),
-    NOT_FOUND_ACCOUNT("계정을 찾을 수 없습니다."),
+    NOT_FOUND_CENTER("센터를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    NOT_FOUND_RESERVATION("예약을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    NOT_FOUND_THEME("테마를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    NOT_FOUND_ADMIN("관리자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    NOT_FOUND_ACCOUNT("계정을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+
+    ACCOUNT_FORBIDDEN("접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
+
+    NOT_FOUND_CENTER_ID("센터 고유값을 찾을 수 없습니다."),
+    NOT_FOUND_ACCOUNT_ID("계정 고유값을 찾을 수 없습니다."),
+    NOT_FOUND_ROLE("권한을 찾을 수 없습니다."),
+
     ;
 
     val exception = exception(null)

@@ -1,6 +1,6 @@
 package com.hshim.escapemanager.api.account
 
-import com.hshim.escapemanager.annotation.PublicEndpoint
+import com.hshim.escapemanager.annotation.role.Public
 import com.hshim.escapemanager.model.account.AccountLoginRequest
 import com.hshim.escapemanager.model.account.AccountLoginResponse
 import com.hshim.escapemanager.service.account.AccountQueryService
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/account")
 class AccountController(private val accountQueryService: AccountQueryService) {
 
-    @PublicEndpoint
+    @Public
     @PostMapping("/login")
     fun login(@RequestBody request: AccountLoginRequest): AccountLoginResponse {
         return accountQueryService.login(request)

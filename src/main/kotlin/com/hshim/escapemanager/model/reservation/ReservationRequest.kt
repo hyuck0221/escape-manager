@@ -1,7 +1,7 @@
 package com.hshim.escapemanager.model.reservation
 
-import com.hshim.escapemanager.database.reservation.Reservation
 import com.hshim.escapemanager.database.theme.Theme
+import com.hshim.escapemanager.database.theme.reservation.Reservation
 import util.DateUtil.stringToDate
 
 class ReservationRequest(

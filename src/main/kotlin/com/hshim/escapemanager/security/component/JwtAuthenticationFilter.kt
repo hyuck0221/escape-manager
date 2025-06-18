@@ -1,5 +1,6 @@
 package com.hshim.escapemanager.security.component
 
+import com.hshim.escapemanager.common.token.context.ContextUtil
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -14,13 +15,16 @@ class JwtAuthenticationFilter(
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
-        val header = request.getHeader(HttpHeaders.AUTHORIZATION)
-        if (header?.startsWith("Bearer ") == true) {
-            val token = header.substring(7)
-            tokenProvider.getAuthentication(token)?.let {
-                SecurityContextHolder.getContext().authentication = it
+        try {
+            val header = request.getHeader(HttpHeaders.AUTHORIZATION)
+            if (header?.startsWith("Bearer ") == true) {
+                val token = header.substring(7)
+                tokenProvider.getAuthentication(token)?.let { SecurityContextHolder.getContext().authentication = it }
+                tokenProvider.getClaims(token)?.let { ContextUtil.set(it) }
             }
+            chain.doFilter(request, response)
+        } finally {
+            ContextUtil.clear()
         }
-        chain.doFilter(request, response)
     }
 }
