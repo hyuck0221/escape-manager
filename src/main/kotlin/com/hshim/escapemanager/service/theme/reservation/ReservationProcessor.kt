@@ -15,11 +15,11 @@ class ReservationProcessor(
     private val reservationRepository: ReservationRepository,
     private val reservationLogRepository: ReservationLogRepository,
 ) {
-    private val queue: Queue<Pair<Reservation>> = LinkedList()
+    private val queue: Queue<Pair<Reservation, String>> = LinkedList()
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     fun process() {
-        val reservation = queue.poll() ?: return
+        val (reservation, taskId) = queue.poll() ?: return
         try {
             val reservingTimes = reservationRepository.findAllByThemeIdAndDatetime(
                 themeId = reservation.theme.id,
