@@ -4,7 +4,6 @@ import com.hshim.escapemanager.database.theme.repository.ThemeRepository
 import com.hshim.escapemanager.database.theme.reservation.repository.ReservationRepository
 import com.hshim.escapemanager.exception.GlobalException
 import com.hshim.escapemanager.model.reservation.ReservationRequest
-import com.hshim.escapemanager.model.reservation.ReservationResponse
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -17,13 +16,12 @@ class ReservationCommandService(
     private val themeRepository: ThemeRepository,
     private val reservationProcessor: ReservationProcessor,
 ) {
-    fun init(themeId: String, userId: String?, request: ReservationRequest): ReservationResponse {
-
-        val theme = themeRepository.findByIdOrNull(themeId) ?: throw GlobalException.NOT_FOUND_THEME.exception
-        theme.validateReserveTime(request.datetime.stringToDate())
-
-        reservationProcessor.add(request.toEntity(theme, userId))
-        return
+    fun initTask(themeId: String, userId: String?, taskId: String, request: ReservationRequest): Boolean {
+        val theme = themeRepository.findByIdOrNull(themeId)
+            ?.apply { this.validateReserveTime(request.datetime.stringToDate("yyyy-MM-dd HH:mm")) }
+            ?: throw GlobalException.NOT_FOUND_THEME.exception
+        reservationProcessor.addTask(taskId, request.toEntity(theme, userId))
+        return true
     }
 
     fun deleteById(themeId: String, id: String) {
@@ -37,4 +35,6 @@ class ReservationCommandService(
                 reservationRepository.delete(it)
             } ?: throw GlobalException.NOT_FOUND_RESERVATION.exception
     }
+
+    fun deleteTask(taskId: String) = reservationProcessor.remove(taskId)
 }

@@ -27,7 +27,7 @@ class ThemeResponse(
         difficulty = theme.difficulty,
         fear = theme.fear,
         activity = theme.activity,
-        reservationOpenTime = theme.reservationOpenTime.dateToString(),
+        reservationOpenTime = theme.reservationOpenTime.dateToString("HH:mm"),
         minPersonCnt = theme.minPersonCnt,
         maxPersonCnt = theme.maxPersonCnt,
         reserveTimes = theme.reserveTimes.map { it.dateToString("HH:mm") },

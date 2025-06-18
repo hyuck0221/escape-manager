@@ -7,13 +7,16 @@ import com.hshim.escapemanager.common.token.context.ContextUtil.getContext
 import com.hshim.escapemanager.common.token.context.ContextUtil.getRole
 import com.hshim.escapemanager.database.account.enums.Role.ADMIN
 import com.hshim.escapemanager.database.account.enums.Role.USER
+import com.hshim.escapemanager.exception.GlobalException
 import com.hshim.escapemanager.model.reservation.ReservationRequest
 import com.hshim.escapemanager.model.reservation.ReservationResponse
 import com.hshim.escapemanager.service.theme.reservation.ReservationCommandService
 import com.hshim.escapemanager.service.theme.reservation.ReservationQueryService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 
 
 @RestController
@@ -53,13 +56,32 @@ class ReservationController(
 
     @Public
     @PostMapping
-    fun init(
+    fun initTask(
         @PathVariable themeId: String,
+        @RequestParam(required = true) taskId: String,
         @RequestBody request: ReservationRequest,
-    ): ReservationResponse {
+    ) {
         val userId = if (getContext() != null && getRole() == USER) getAccountId() else null
-        return reservationCommandService.init(themeId, userId, request)
+        val success = reservationCommandService.initTask(themeId, userId, taskId, request)
+        if (success) throw GlobalException.CREATED.exception
     }
+
+    @Public
+    @GetMapping("/task/{taskId}", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
+    fun connectTask(
+        @PathVariable themeId: String,
+        @PathVariable taskId: String,
+    ): SseEmitter {
+        return reservationQueryService.connectTask(taskId)
+    }
+
+    @Public
+    @DeleteMapping("/task/{taskId}")
+    fun deleteTask(
+        @PathVariable themeId: String,
+        @PathVariable taskId: String,
+    ) = reservationCommandService.deleteTask(taskId)
+
 
     @Role([ADMIN])
     @DeleteMapping("/{id}")

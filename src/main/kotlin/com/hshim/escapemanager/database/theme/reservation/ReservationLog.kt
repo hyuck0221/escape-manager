@@ -11,7 +11,7 @@ import util.CommonUtil.ulid
 class ReservationLog(
     @Id
     @Column(columnDefinition = "varchar(36)")
-    val id: String = ulid(),
+    val taskId: String,
 
     @ManyToOne(targetEntity = Theme::class, fetch = FetchType.LAZY)
     @JoinColumn(name = "theme_id", nullable = false, columnDefinition = "varchar(36)")

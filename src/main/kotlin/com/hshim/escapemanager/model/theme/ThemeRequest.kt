@@ -26,7 +26,7 @@ class ThemeRequest(
         difficulty = difficulty,
         fear = fear,
         activity = activity,
-        reservationOpenTime = reservationOpenTime.stringToDate(),
+        reservationOpenTime = reservationOpenTime.stringToDate("HH:mm"),
         openDays = openDays,
         minPersonCnt = minPersonCnt,
         maxPersonCnt = maxPersonCnt,
@@ -40,7 +40,7 @@ class ThemeRequest(
         theme.difficulty = difficulty
         theme.fear = fear
         theme.activity = activity
-        theme.reservationOpenTime = reservationOpenTime.stringToDate()
+        theme.reservationOpenTime = reservationOpenTime.stringToDate("HH:mm")
         theme.openDays = openDays
         theme.minPersonCnt = minPersonCnt
         theme.maxPersonCnt = maxPersonCnt

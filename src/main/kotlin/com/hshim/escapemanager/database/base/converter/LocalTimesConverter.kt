@@ -12,6 +12,12 @@ class LocalTimesConverter : AttributeConverter<List<LocalTime>, String> {
     }
 
     override fun convertToEntityAttribute(dbData: String?): List<LocalTime>? {
-        return dbData?.split(",")?.map { it.stringToDate() }
+        return dbData
+            ?.split(",")
+            ?.map { timeStr ->
+                val cleaned = timeStr.trim()
+                val pattern = if (cleaned.count { it == ':' } == 1) "HH:mm" else "HH:mm:ss"
+                cleaned.stringToDate(pattern)
+            }
     }
 }

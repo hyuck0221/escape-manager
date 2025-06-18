@@ -53,8 +53,8 @@ class Reservation(
         }?.let { throw it.exception }
     }
 
-    fun toLogEntity(exception: Exception?) = ReservationLog(
-        id = id,
+    fun toLogEntity(taskId: String, exception: Exception?) = ReservationLog(
+        taskId = taskId,
         theme = theme,
         user = user,
         reservation = if (exception == null) this else null,

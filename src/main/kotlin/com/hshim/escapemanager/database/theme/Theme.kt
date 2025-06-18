@@ -59,9 +59,12 @@ class Theme(
     var reserveTimes: List<LocalTime>,
 ) : BaseTimeEntity() {
 
+    val openDateTime: LocalDateTime
+        get() = LocalDate.now().plusDays(openDays.toLong()).atTime(reservationOpenTime)
+
     @OneToMany(
         targetEntity = Reservation::class,
-        mappedBy = "center",
+        mappedBy = "theme",
         cascade = [CascadeType.ALL],
         orphanRemoval = true
     )
@@ -72,12 +75,11 @@ class Theme(
         .map { it.datetime.toLocalTime() }
 
     fun validateReserveTime(datetime: LocalDateTime) {
-        val now = LocalDateTime.now()
         when {
-            now.toLocalDate() == datetime.toLocalDate() && reservationOpenTime > datetime.toLocalTime()
+            openDateTime == datetime.toLocalDate() && reservationOpenTime > datetime.toLocalTime()
                 -> GlobalException.IS_NOT_OPEN_RESERVE_TIME
 
-            reserveTimes.contains(datetime.toLocalTime())
+            !reserveTimes.contains(datetime.toLocalTime())
                 -> GlobalException.IS_NOT_RESERVE_TIME
 
             reservingTimes(datetime.toLocalDate()).contains(datetime.toLocalTime())

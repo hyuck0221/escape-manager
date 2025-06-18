@@ -7,15 +7,13 @@ import util.DateUtil.stringToDate
 
 class ReservationRequest(
     val datetime: String,
-    val code: String,
     val name: String,
     val phoneNo: String,
 ) {
     fun toEntity(theme: Theme, userId: String?) = Reservation(
         theme = theme,
         user = userId?.let { User.of(it) },
-        datetime = datetime.stringToDate(),
-        code = code,
+        datetime = datetime.stringToDate("yyyy-MM-dd HH:mm"),
         name = name,
         phoneNo = phoneNo,
     )

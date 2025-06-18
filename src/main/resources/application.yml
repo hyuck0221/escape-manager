@@ -31,3 +31,8 @@ security:
   jwt:
     secret: ${jwt_secret}
     expiry: 604800
+
+thread:
+  reservation:
+    interval: 10000
+    time-unit: NANOSECONDS

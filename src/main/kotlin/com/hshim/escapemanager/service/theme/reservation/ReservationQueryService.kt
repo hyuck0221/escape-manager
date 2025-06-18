@@ -15,7 +15,10 @@ import util.DateUtil.stringToDate
 
 @Service
 @Transactional(readOnly = true)
-class ReservationQueryService(private val reservationRepository: ReservationRepository) {
+class ReservationQueryService(
+    private val reservationRepository: ReservationRepository,
+    private val reservationProcessor: ReservationProcessor,
+) {
     fun findById(themeId: String, id: String): ReservationResponse {
         return reservationRepository.findByThemeIdAndId(themeId, id)?.let { ReservationResponse.detail(it) }
             ?: throw GlobalException.NOT_FOUND_RESERVATION.exception
@@ -44,4 +47,6 @@ class ReservationQueryService(private val reservationRepository: ReservationRepo
             }
         }
     }
+
+    fun connectTask(taskId: String) = reservationProcessor.sseConnect(taskId)
 }
