@@ -1,5 +1,9 @@
 package com.hshim.escapemanager.service.theme.reservation
 
+import com.hshim.escapemanager.common.token.context.ContextUtil.getAccountId
+import com.hshim.escapemanager.common.token.context.ContextUtil.getContext
+import com.hshim.escapemanager.common.token.context.ContextUtil.getRole
+import com.hshim.escapemanager.database.account.enums.Role
 import com.hshim.escapemanager.database.theme.reservation.repository.ReservationRepository
 import com.hshim.escapemanager.exception.GlobalException
 import com.hshim.escapemanager.model.reservation.ReservationResponse
@@ -13,7 +17,12 @@ import util.DateUtil.stringToDate
 @Transactional(readOnly = true)
 class ReservationQueryService(private val reservationRepository: ReservationRepository) {
     fun findById(themeId: String, id: String): ReservationResponse {
-        return reservationRepository.findByThemeIdAndId(themeId, id)?.let { ReservationResponse(it) }
+        return reservationRepository.findByThemeIdAndId(themeId, id)?.let { ReservationResponse.detail(it) }
+            ?: throw GlobalException.NOT_FOUND_RESERVATION.exception
+    }
+
+    fun findByCode(themeId: String, code: String): ReservationResponse {
+        return reservationRepository.findByThemeIdAndCode(themeId, code)?.let { ReservationResponse.detail(it) }
             ?: throw GlobalException.NOT_FOUND_RESERVATION.exception
     }
 
@@ -26,6 +35,13 @@ class ReservationQueryService(private val reservationRepository: ReservationRepo
                 search = search,
                 pageable = pageable
             )
-        }.map { ReservationResponse(it) }
+        }.map {
+            when {
+                getContext() == null -> ReservationResponse.simple(it)
+                getRole() != Role.USER -> ReservationResponse.detail(it)
+                getRole() == Role.USER && getAccountId() == it.user?.id -> ReservationResponse.detail(it)
+                else -> ReservationResponse.simple(it)
+            }
+        }
     }
 }

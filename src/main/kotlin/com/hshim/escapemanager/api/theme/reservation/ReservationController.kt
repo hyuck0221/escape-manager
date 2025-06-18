@@ -1,6 +1,10 @@
 package com.hshim.escapemanager.api.theme.reservation
 
+import com.hshim.escapemanager.annotation.role.Public
 import com.hshim.escapemanager.annotation.role.Role
+import com.hshim.escapemanager.common.token.context.ContextUtil.getAccountId
+import com.hshim.escapemanager.common.token.context.ContextUtil.getContext
+import com.hshim.escapemanager.common.token.context.ContextUtil.getRole
 import com.hshim.escapemanager.database.account.enums.Role.ADMIN
 import com.hshim.escapemanager.database.account.enums.Role.USER
 import com.hshim.escapemanager.model.reservation.ReservationRequest
@@ -18,7 +22,7 @@ class ReservationController(
     private val reservationQueryService: ReservationQueryService,
     private val reservationCommandService: ReservationCommandService,
 ) {
-    @Role([ADMIN, USER])
+    @Role([ADMIN])
     @GetMapping("/{id}")
     fun findById(
         @PathVariable themeId: String,
@@ -27,7 +31,16 @@ class ReservationController(
         return reservationQueryService.findById(themeId, id)
     }
 
-    @Role([ADMIN, USER])
+    @Public
+    @GetMapping("/code/{code}")
+    fun findByCode(
+        @PathVariable themeId: String,
+        @PathVariable code: String,
+    ): ReservationResponse {
+        return reservationQueryService.findByCode(themeId, code)
+    }
+
+    @Public
     @GetMapping("/list")
     fun findAllPageBy(
         @PathVariable themeId: String,
@@ -38,29 +51,27 @@ class ReservationController(
         return reservationQueryService.findAllPageBy(themeId, date, search, pageable)
     }
 
-    @Role([USER])
+    @Public
     @PostMapping
     fun init(
         @PathVariable themeId: String,
         @RequestBody request: ReservationRequest,
     ): ReservationResponse {
-        return reservationCommandService.init(themeId, request)
+        val userId = if (getContext() != null && getRole() == USER) getAccountId() else null
+        return reservationCommandService.init(themeId, userId, request)
     }
 
-    @Role([ADMIN, USER])
-    @PutMapping("/{id}")
-    fun update(
-        @PathVariable themeId: String,
-        @PathVariable id: String,
-        @RequestBody request: ReservationRequest,
-    ): ReservationResponse {
-        return reservationCommandService.update(themeId, id, request)
-    }
-
-    @Role([ADMIN, USER])
+    @Role([ADMIN])
     @DeleteMapping("/{id}")
-    fun delete(
+    fun deleteById(
         @PathVariable themeId: String,
         @PathVariable id: String,
-    ) = reservationCommandService.delete(themeId, id)
+    ) = reservationCommandService.deleteById(themeId, id)
+
+    @Public
+    @DeleteMapping("/code/{code}")
+    fun deleteByCode(
+        @PathVariable themeId: String,
+        @PathVariable code: String,
+    ) = reservationCommandService.deleteByCode(themeId, code)
 }

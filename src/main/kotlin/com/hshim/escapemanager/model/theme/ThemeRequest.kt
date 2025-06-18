@@ -13,8 +13,10 @@ class ThemeRequest(
     val fear: Double?,
     val activity: Double?,
     val reservationOpenTime: String,
+    val openDays: Int,
     val minPersonCnt: Int,
     val maxPersonCnt: Int,
+    val reserveTimes: List<String>,
 ) {
     fun toEntity(centerId: String) = Theme(
         name = name,
@@ -25,8 +27,10 @@ class ThemeRequest(
         fear = fear,
         activity = activity,
         reservationOpenTime = reservationOpenTime.stringToDate(),
+        openDays = openDays,
         minPersonCnt = minPersonCnt,
         maxPersonCnt = maxPersonCnt,
+        reserveTimes = reserveTimes.map { it.stringToDate("HH:mm") },
     )
 
     fun updateTo(theme: Theme) {
@@ -37,6 +41,7 @@ class ThemeRequest(
         theme.fear = fear
         theme.activity = activity
         theme.reservationOpenTime = reservationOpenTime.stringToDate()
+        theme.openDays = openDays
         theme.minPersonCnt = minPersonCnt
         theme.maxPersonCnt = maxPersonCnt
     }

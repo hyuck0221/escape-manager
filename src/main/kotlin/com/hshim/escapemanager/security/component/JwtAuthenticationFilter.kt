@@ -20,7 +20,7 @@ class JwtAuthenticationFilter(
             if (header?.startsWith("Bearer ") == true) {
                 val token = header.substring(7)
                 tokenProvider.getAuthentication(token)?.let { SecurityContextHolder.getContext().authentication = it }
-                tokenProvider.getClaims(token)?.let { ContextUtil.set(it) }
+                tokenProvider.getClaims(token)?.let { ContextUtil.setContext(it) }
             }
             chain.doFilter(request, response)
         } finally {

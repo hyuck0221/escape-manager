@@ -16,6 +16,7 @@ class ThemeResponse(
     val reservationOpenTime: String,
     val minPersonCnt: Int,
     val maxPersonCnt: Int,
+    val reserveTimes: List<String>,
 ) {
     constructor(theme: Theme) : this(
         id = theme.id,
@@ -29,5 +30,6 @@ class ThemeResponse(
         reservationOpenTime = theme.reservationOpenTime.dateToString(),
         minPersonCnt = theme.minPersonCnt,
         maxPersonCnt = theme.maxPersonCnt,
+        reserveTimes = theme.reserveTimes.map { it.dateToString("HH:mm") },
     )
 }

@@ -23,4 +23,14 @@ class User(
     password = password,
     description = description,
     role = Role.USER,
-)
+) {
+    companion object {
+        fun of(id: String) = User(
+            id = id,
+            name = "",
+            loginId = null,
+            password = null,
+            description = null,
+        )
+    }
+}

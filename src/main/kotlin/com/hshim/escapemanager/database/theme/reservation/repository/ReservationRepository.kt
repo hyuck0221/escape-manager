@@ -6,9 +6,11 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 interface ReservationRepository : JpaRepository<Reservation, String> {
     fun findByThemeIdAndId(themeId: String, id: String): Reservation?
+    fun findByThemeIdAndCode(themeId: String, code: String): Reservation?
     @Query(
         """
             select r from Reservation r 
@@ -31,4 +33,5 @@ interface ReservationRepository : JpaRepository<Reservation, String> {
     fun findAllByThemeIdAndDate(themeId: String, date: LocalDate, pageable: Pageable): Page<Reservation>
 
     fun deleteByThemeIdAndId(themeId: String, id: String)
+    fun findAllByThemeIdAndDatetime(themeId: String, datetime: LocalDateTime): List<Reservation>
 }

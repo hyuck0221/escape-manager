@@ -1,10 +1,15 @@
 package com.hshim.escapemanager.database.theme
 
 import com.hshim.escapemanager.database.base.BaseTimeEntity
+import com.hshim.escapemanager.database.base.converter.LocalTimesConverter
 import com.hshim.escapemanager.database.center.Center
 import com.hshim.escapemanager.database.theme.enums.ThemeCategory
+import com.hshim.escapemanager.database.theme.reservation.Reservation
+import com.hshim.escapemanager.exception.GlobalException
 import jakarta.persistence.*
 import util.CommonUtil.ulid
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 
 @Entity
@@ -41,11 +46,46 @@ class Theme(
     var reservationOpenTime: LocalTime,
 
     @Column(nullable = false)
+    var openDays: Int,
+
+    @Column(nullable = false)
     var minPersonCnt: Int,
 
     @Column(nullable = false)
     var maxPersonCnt: Int,
+
+    @Column(nullable = false, columnDefinition = "varchar(255)")
+    @Convert(converter = LocalTimesConverter::class)
+    var reserveTimes: List<LocalTime>,
 ) : BaseTimeEntity() {
+
+    @OneToMany(
+        targetEntity = Reservation::class,
+        mappedBy = "center",
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true
+    )
+    val reservations: MutableSet<Reservation> = mutableSetOf()
+
+    fun reservingTimes(date: LocalDate) = reservations
+        .filter { it.datetime.toLocalDate() == date }
+        .map { it.datetime.toLocalTime() }
+
+    fun validateReserveTime(datetime: LocalDateTime) {
+        val now = LocalDateTime.now()
+        when {
+            now.toLocalDate() == datetime.toLocalDate() && reservationOpenTime > datetime.toLocalTime()
+                -> GlobalException.IS_NOT_OPEN_RESERVE_TIME
+
+            reserveTimes.contains(datetime.toLocalTime())
+                -> GlobalException.IS_NOT_RESERVE_TIME
+
+            reservingTimes(datetime.toLocalDate()).contains(datetime.toLocalTime())
+                -> GlobalException.IS_ALREADY_RESERVE_TIME
+
+            else -> null
+        }?.let { throw it.exception }
+    }
 
     companion object {
         fun of(id: String) = Theme(
@@ -58,8 +98,10 @@ class Theme(
             fear = null,
             activity = null,
             reservationOpenTime = LocalTime.now(),
+            openDays = 0,
             minPersonCnt = 0,
             maxPersonCnt = 0,
+            reserveTimes = listOf(),
         )
     }
 }

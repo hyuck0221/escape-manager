@@ -1,7 +1,13 @@
 package com.hshim.escapemanager.database.theme.reservation
 
+import com.hshim.escapemanager.common.token.context.ContextUtil.getAccountId
+import com.hshim.escapemanager.common.token.context.ContextUtil.getContext
+import com.hshim.escapemanager.common.token.context.ContextUtil.getRole
+import com.hshim.escapemanager.database.account.enums.Role
+import com.hshim.escapemanager.database.account.user.User
 import com.hshim.escapemanager.database.base.BaseTimeEntity
 import com.hshim.escapemanager.database.theme.Theme
+import com.hshim.escapemanager.exception.GlobalException
 import jakarta.persistence.*
 import util.CommonUtil.ulid
 import util.DateUtil.dateToString
@@ -19,6 +25,10 @@ class Reservation(
     @JoinColumn(name = "theme_id", nullable = false, columnDefinition = "varchar(36)")
     val theme: Theme,
 
+    @ManyToOne(targetEntity = User::class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = true, columnDefinition = "varchar(36)")
+    val user: User?,
+
     @Column(nullable = false)
     var datetime: LocalDateTime,
 
@@ -31,7 +41,26 @@ class Reservation(
     @Column(nullable = false)
     var phoneNo: String,
 
-    ) : BaseTimeEntity() {
+) : BaseTimeEntity() {
+
+    fun validateUser() {
+        when {
+            user == null -> null
+            getContext() != null && getRole() != Role.USER -> null
+            getContext() == null -> GlobalException.ACCOUNT_FORBIDDEN
+            getAccountId() != user?.id -> GlobalException.ACCOUNT_FORBIDDEN
+            else -> null
+        }?.let { throw it.exception }
+    }
+
+    fun toLogEntity(exception: Exception?) = ReservationLog(
+        id = id,
+        theme = theme,
+        user = user,
+        reservation = if (exception == null) this else null,
+        success = exception == null,
+        failReason = exception?.message
+    )
 
     companion object {
         fun buildCode(): String {

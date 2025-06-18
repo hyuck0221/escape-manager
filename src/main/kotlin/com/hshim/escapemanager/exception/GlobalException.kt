@@ -19,6 +19,10 @@ enum class GlobalException(
     NOT_FOUND_CENTER_ID("센터 고유값을 찾을 수 없습니다."),
     NOT_FOUND_ACCOUNT_ID("계정 고유값을 찾을 수 없습니다."),
     NOT_FOUND_ROLE("권한을 찾을 수 없습니다."),
+    IS_NOT_RESERVE_TIME("예약 시간이 아닙니다."),
+
+    IS_NOT_OPEN_RESERVE_TIME("아직 열리지 않은 예약입니다."),
+    IS_ALREADY_RESERVE_TIME("이미 예약된 시간입니다."),
 
     ;
 
