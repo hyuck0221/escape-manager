@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://${db_url}/escape_manager_dev?autoReconnect=true&rewriteBatchedStatements=true
+    username: ${db_username}
+    password: ${db_password}
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        default_batch_fetch_size: 100
+        format_sql: true
+
+security:
+  jwt:
+    expiry: 604800

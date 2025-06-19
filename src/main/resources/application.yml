@@ -10,19 +10,12 @@ spring:
       max-request-size: 50MB
 
   datasource:
-    url: jdbc:mariadb://${db_url}/escape_manager?autoReconnect=true&rewriteBatchedStatements=true
-    username: ${db_username}
-    password: ${db_password}
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       generate-ddl: false
-      hibernate:
-        show_sql: true
-        default_batch_fetch_size: 100
-        format_sql: true
 
   security:
     enabled: true
