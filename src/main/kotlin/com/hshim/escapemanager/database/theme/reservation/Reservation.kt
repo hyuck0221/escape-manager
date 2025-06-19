@@ -43,6 +43,9 @@ class Reservation(
 
 ) : BaseTimeEntity() {
 
+    @OneToMany(targetEntity = ReservationLog::class, mappedBy = "reservation", cascade = [CascadeType.ALL])
+    val reservationLogs: MutableSet<ReservationLog> = mutableSetOf()
+
     fun validateUser() {
         when {
             user == null -> null
