@@ -16,6 +16,8 @@ enum class GlobalException(
 
     ACCOUNT_FORBIDDEN("접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
 
+    EXISTS_ACCOUNT_LOGIN_ID("사용중인 로그인 아이디 입니다.", HttpStatus.CONFLICT),
+
     NOT_FOUND_CENTER_ID("센터 고유값을 찾을 수 없습니다."),
     NOT_FOUND_ACCOUNT_ID("계정 고유값을 찾을 수 없습니다."),
     NOT_FOUND_ROLE("권한을 찾을 수 없습니다."),

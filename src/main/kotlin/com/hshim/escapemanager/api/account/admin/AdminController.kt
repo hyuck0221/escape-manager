@@ -51,15 +51,6 @@ class AdminController(
     }
 
     @Role([SUPER_ADMIN])
-    @PutMapping("/{id}")
-    fun update(
-        @PathVariable id: String,
-        @RequestBody request: AdminRequest,
-    ): AdminResponse {
-        return adminCommandService.update(id, request)
-    }
-
-    @Role([SUPER_ADMIN])
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: String) = adminCommandService.delete(id)
 }

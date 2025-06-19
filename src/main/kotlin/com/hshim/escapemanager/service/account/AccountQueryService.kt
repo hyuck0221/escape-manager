@@ -1,6 +1,8 @@
 package com.hshim.escapemanager.service.account
 
+import com.hshim.escapemanager.common.token.context.ContextUtil.getAccountId
 import com.hshim.escapemanager.database.account.repository.AccountRepository
+import com.hshim.escapemanager.exception.GlobalException
 import com.hshim.escapemanager.model.account.AccountLoginRequest
 import com.hshim.escapemanager.model.account.AccountLoginResponse
 import com.hshim.escapemanager.security.component.JwtTokenProvider
@@ -21,5 +23,14 @@ class AccountQueryService(
         val account = accountRepository.findByLoginId(request.loginId)!!
         val token = tokenProvider.generateToken(account, roles)
         return AccountLoginResponse(accessToken = token, role = roles.first())
+    }
+
+    fun validateLoginId(loginId: String) {
+        val account = accountRepository.findByLoginId(loginId)
+        when {
+            account == null -> return
+            account.id == getAccountId() -> return
+            else -> throw GlobalException.EXISTS_ACCOUNT_LOGIN_ID.exception
+        }
     }
 }

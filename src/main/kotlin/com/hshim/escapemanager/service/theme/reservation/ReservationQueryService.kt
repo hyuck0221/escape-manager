@@ -11,7 +11,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import util.DateUtil.stringToDate
+import java.time.YearMonth
 
 @Service
 @Transactional(readOnly = true)
@@ -29,12 +29,17 @@ class ReservationQueryService(
             ?: throw GlobalException.NOT_FOUND_RESERVATION.exception
     }
 
-    fun findAllPageBy(themeId: String, date: String, search: String?, pageable: Pageable): Page<ReservationResponse> {
+    fun findAllPageBy(
+        themeId: String,
+        yearMonth: YearMonth,
+        search: String?,
+        pageable: Pageable
+    ): Page<ReservationResponse> {
         return when (search == null) {
-            true -> reservationRepository.findAllByThemeIdAndDate(themeId, date.stringToDate(), pageable)
+            true -> reservationRepository.findAllByThemeIdAndYearMonth(themeId, yearMonth, pageable)
             false -> reservationRepository.findAllByThemeIdAndDateAndSearch(
                 themeId = themeId,
-                date = date.stringToDate(),
+                yearMonth = yearMonth,
                 search = search,
                 pageable = pageable
             )

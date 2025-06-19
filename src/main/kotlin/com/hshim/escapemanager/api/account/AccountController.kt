@@ -1,13 +1,12 @@
 package com.hshim.escapemanager.api.account
 
 import com.hshim.escapemanager.annotation.role.Public
+import com.hshim.escapemanager.annotation.role.Role
+import com.hshim.escapemanager.database.account.enums.Role.*
 import com.hshim.escapemanager.model.account.AccountLoginRequest
 import com.hshim.escapemanager.model.account.AccountLoginResponse
 import com.hshim.escapemanager.service.account.AccountQueryService
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 
 @RestController
@@ -18,5 +17,11 @@ class AccountController(private val accountQueryService: AccountQueryService) {
     @PostMapping("/login")
     fun login(@RequestBody request: AccountLoginRequest): AccountLoginResponse {
         return accountQueryService.login(request)
+    }
+
+    @Role([SUPER_ADMIN, ADMIN, USER])
+    @GetMapping("/login-id/{loginId}/validate")
+    fun validateLoginId(@PathVariable loginId: String) {
+        return accountQueryService.validateLoginId(loginId)
     }
 }

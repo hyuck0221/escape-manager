@@ -17,9 +17,4 @@ class AdminRequest(
         password = BCryptPasswordEncoder().encode(password),
         description = description,
     )
-
-    fun updateTo(admin: Admin) {
-        admin.name = name
-        admin.description = description
-    }
 }

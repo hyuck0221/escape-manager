@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
+import java.time.YearMonth
 
 
 @RestController
@@ -47,18 +48,18 @@ class ReservationController(
     @GetMapping("/list")
     fun findAllPageBy(
         @PathVariable themeId: String,
-        @RequestParam(required = true) date: String,
+        @RequestParam(required = true) yearMonth: YearMonth,
         @RequestParam(required = false) search: String?,
         pageable: Pageable,
     ): Page<ReservationResponse> {
-        return reservationQueryService.findAllPageBy(themeId, date, search, pageable)
+        return reservationQueryService.findAllPageBy(themeId, yearMonth, search, pageable)
     }
 
     @Public
-    @PostMapping
+    @PostMapping("/task/{taskId}")
     fun initTask(
         @PathVariable themeId: String,
-        @RequestParam(required = true) taskId: String,
+        @PathVariable taskId: String,
         @RequestBody request: ReservationRequest,
     ) {
         val userId = if (getContext() != null && getRole() == USER) getAccountId() else null
