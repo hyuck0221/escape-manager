@@ -17,6 +17,7 @@ java {
 
 repositories {
 	mavenCentral()
+	maven { url = uri("https://jitpack.io") }
 }
 
 dependencies {
@@ -30,7 +31,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-authorization-server")
 	implementation("com.nimbusds:nimbus-jose-jwt")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation(project(":kotlin-utils"))
+	implementation("com.github.hyuck0221:kotlin-utils:0.0.2")
 	runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
 }
 
