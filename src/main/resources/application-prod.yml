@@ -9,6 +9,14 @@ spring:
         show_sql: false
         default_batch_fetch_size: 100
         format_sql: false
+  security:
+    cors:
+      - http://localhost:8080
+      - http://127.0.0.1:8080
+      - http://localhost:8081
+      - http://127.0.0.1:8081
+      - http://localhost:3000
+      - http://127.0.0.1:3000
 
 security:
   jwt:

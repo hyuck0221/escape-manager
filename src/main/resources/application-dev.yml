@@ -9,6 +9,9 @@ spring:
         show_sql: true
         default_batch_fetch_size: 100
         format_sql: true
+  security:
+    cors:
+      - "*"
 
 security:
   jwt:
